@@ -1,3 +1,4 @@
+import json
 from django.http import HttpResponse
 import numpy as np
 import skfuzzy as fuzz
@@ -61,6 +62,6 @@ def calo_to_goal(request):
         body = request.body.decode('utf-8')
         body_data = json.loads(body)
         time_expert = caculate_time_to_goal(current_wt=body_data.current_wt, goal_wt=body_data.goal_wt)
-        tdee = caculate_tdee(body_data.gender,body_data.weight,body_data.height,body_data.age)
+        tdee = caculate_tdee(body_data.gender,body_data.current_wt,body_data.height,body_data.age,body_data.activity_level)
         goal_calo = goal_calo(tdee,time_expert,body_data.goal_wt,body_data.current_wt, body_data.calo_consumed)
-        return HttpResponse({goal_calo:goal_calo})
+        return HttpResponse({goal_calo:goal_calo, time_expert:time_expert,current_calo:tdee})
